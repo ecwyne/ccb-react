@@ -1,12 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {withState, lifecycle, compose} from 'recompose';
+import {withState, lifecycle, withHandlers, compose} from 'recompose';
 import R from 'ramda';
 // import {Panel, ListGroup, ListGroupItem} from 'react-bootstrap';
 
 const state = compose(
-	withState('tribeArr', 'setTribeArr', [])
+	withState('tribeArr', 'setTribeArr', []),
+	withState('filters', 'setFilters', {always: R.always(true)})
 );
+
+const handlers = withHandlers({
+	setFilter: props => type => e => {
+		const val = e.target.value;
+		console.log({val});
+		if (val){
+			props.setFilters(R.assoc(type, R.propEq(type, e.target.value)))
+		} else {
+			props.setFilters(R.dissoc(type))
+		}
+	}
+});
 
 const cycle = lifecycle({
 	componentDidMount: function(){
@@ -19,12 +32,31 @@ const cycle = lifecycle({
 	}
 });
 
-const Home = ({tribeArr}) => {
-	return (
+const Home = ({tribeArr, filters, setFilter}) => {
+	const filteredTribes = R.values(filters).reduce((arr, pred) => arr.filter(pred), tribeArr);
+	const locationArr = R.uniq(tribeArr.map(R.prop('area'))).filter(R.identity);
+	const dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Varies'];
+	const timeArr = ['Evening', 'Morning', 'Varies'];
+	return tribeArr.length == 0 ? <h1>Loading...</h1> : (
 		<div className="container">
-		<div className="card-columns">
+		<div>
+			<select onChange={setFilter('area')} className="custom-select">
+				<option value="">All Locations</option>
+				{ locationArr.map(e => <option key={e} value={e}>{e}</option>) }
+			</select>
+			<select onChange={setFilter('meeting_day')} className="custom-select">
+				<option value="">All Days</option>
+				{ dayArr.map(e => <option key={e} value={e}>{e}</option>) }
+			</select>
+			<select onChange={setFilter('meeting_time')} className="custom-select">
+				<option value="">All Times</option>
+				{ timeArr.map(e => <option key={e} value={e}>{e}</option>) }
+			</select>
+
+		</div>
+		<div className="card-columns" style={{marginTop: '2rem'}}>
 			{
-				tribeArr.map(e => (
+				filteredTribes.map(e => (
 					<div key={e.id} className="card" style={{width: '20rem'}}>
 					  <div className="card-block">
 					    <h4 className="card-title">{e.name}</h4>
@@ -46,7 +78,7 @@ const Home = ({tribeArr}) => {
 	);
 }
 
-const enhance = compose(state, cycle);
+const enhance = compose(state, handlers, cycle);
 
 
 

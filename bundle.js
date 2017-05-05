@@ -13913,7 +13913,7 @@ module.exports = __webpack_require__(424);
 /* unused harmony export mapProps */
 /* unused harmony export withProps */
 /* unused harmony export withPropsOnChange */
-/* unused harmony export withHandlers */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return withHandlers$1; });
 /* unused harmony export defaultProps */
 /* unused harmony export renameProp */
 /* unused harmony export renameProps */
@@ -13929,7 +13929,7 @@ module.exports = __webpack_require__(424);
 /* unused harmony export onlyUpdateForPropTypes */
 /* unused harmony export withContext */
 /* unused harmony export getContext */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return lifecycle$1; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return lifecycle$1; });
 /* unused harmony export toClass */
 /* unused harmony export setStatic */
 /* unused harmony export setPropTypes */
@@ -14950,9 +14950,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 // import {Panel, ListGroup, ListGroupItem} from 'react-bootstrap';
 
-const state = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_recompose__["a" /* compose */])(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_recompose__["b" /* withState */])('tribeArr', 'setTribeArr', []));
+const state = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_recompose__["a" /* compose */])(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_recompose__["b" /* withState */])('tribeArr', 'setTribeArr', []), __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_recompose__["b" /* withState */])('filters', 'setFilters', { always: __WEBPACK_IMPORTED_MODULE_3_ramda___default.a.always(true) }));
 
-const cycle = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_recompose__["c" /* lifecycle */])({
+const handlers = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_recompose__["c" /* withHandlers */])({
+	setFilter: props => type => e => {
+		const val = e.target.value;
+		console.log({ val });
+		if (val) {
+			props.setFilters(__WEBPACK_IMPORTED_MODULE_3_ramda___default.a.assoc(type, __WEBPACK_IMPORTED_MODULE_3_ramda___default.a.propEq(type, e.target.value)));
+		} else {
+			props.setFilters(__WEBPACK_IMPORTED_MODULE_3_ramda___default.a.dissoc(type));
+		}
+	}
+});
+
+const cycle = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_recompose__["d" /* lifecycle */])({
 	componentDidMount: function () {
 		fetch('https://script.google.com/macros/s/AKfycbyVPGx-25gAtkFBJV5GrrA1JFLcj0kOW81QJPJzV98Fkdy9Kgo/exec').then(res => res.json()).then(arr => {
 			console.table(arr);
@@ -14961,14 +14973,68 @@ const cycle = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_recompose__["c" 
 	}
 });
 
-const Home = ({ tribeArr }) => {
-	return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+const Home = ({ tribeArr, filters, setFilter }) => {
+	const filteredTribes = __WEBPACK_IMPORTED_MODULE_3_ramda___default.a.values(filters).reduce((arr, pred) => arr.filter(pred), tribeArr);
+	const locationArr = __WEBPACK_IMPORTED_MODULE_3_ramda___default.a.uniq(tribeArr.map(__WEBPACK_IMPORTED_MODULE_3_ramda___default.a.prop('area'))).filter(__WEBPACK_IMPORTED_MODULE_3_ramda___default.a.identity);
+	const dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Varies'];
+	const timeArr = ['Evening', 'Morning', 'Varies'];
+	return tribeArr.length == 0 ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+		'h1',
+		null,
+		'Loading...'
+	) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 		'div',
 		{ className: 'container' },
 		__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 			'div',
-			{ className: 'card-columns' },
-			tribeArr.map(e => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+			null,
+			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+				'select',
+				{ onChange: setFilter('area'), className: 'custom-select' },
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'option',
+					{ value: '' },
+					'All Locations'
+				),
+				locationArr.map(e => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'option',
+					{ key: e, value: e },
+					e
+				))
+			),
+			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+				'select',
+				{ onChange: setFilter('meeting_day'), className: 'custom-select' },
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'option',
+					{ value: '' },
+					'All Days'
+				),
+				dayArr.map(e => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'option',
+					{ key: e, value: e },
+					e
+				))
+			),
+			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+				'select',
+				{ onChange: setFilter('meeting_time'), className: 'custom-select' },
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'option',
+					{ value: '' },
+					'All Times'
+				),
+				timeArr.map(e => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'option',
+					{ key: e, value: e },
+					e
+				))
+			)
+		),
+		__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+			'div',
+			{ className: 'card-columns', style: { marginTop: '2rem' } },
+			filteredTribes.map(e => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 				'div',
 				{ key: e.id, className: 'card', style: { width: '20rem' } },
 				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -15024,7 +15090,7 @@ const Home = ({ tribeArr }) => {
 	);
 };
 
-const enhance = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_recompose__["a" /* compose */])(state, cycle);
+const enhance = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_recompose__["a" /* compose */])(state, handlers, cycle);
 
 const App = enhance(Home);
 __WEBPACK_IMPORTED_MODULE_1_react_dom___default.a.render(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(App, null), document.getElementById('react-render-target'));
