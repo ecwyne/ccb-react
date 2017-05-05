@@ -1,0 +1,20 @@
+curl -u ecwyne@gmail.com:skaterseven7 -d "" "https://mountainbrook.ccbchurch.com/api.php?srv=group_search&type_id=7"
+
+curl -u ecwyne@gmail.com:skaterseven7 -d "" "https://mountainbrook.ccbchurch.com/api.php?srv=group_profile_from_id&id=50"
+
+https://mountainbrook.ccbchurch.com/easy_email.php?source=w_group_list&ax=create_new&individual_id=1&group_id=124&individual_full_name=Jon%20Schliep
+
+
+Filter By
+_________
+Availability: public
+group_members < group_capacity
+
+
+Display
+_______
+Group Name
+Leader Name
+Location
+Day/Time
+childcare_provided
